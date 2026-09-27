@@ -25,7 +25,6 @@ class SpendingOverviewCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          // Placeholder for a real chart later (e.g. fl_chart).
           Row(
             children: [
               Container(

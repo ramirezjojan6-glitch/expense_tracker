@@ -16,8 +16,7 @@ class AppTheme {
         foregroundColor: AppColors.lightPink,
         elevation: 0,
       ),
-      fontFamily: 'FacebookSans', // add the font files under assets/fonts
-      // and register them in pubspec.yaml to use the real Facebook Sans.
+      fontFamily: 'FacebookSans',
     );
   }
 }

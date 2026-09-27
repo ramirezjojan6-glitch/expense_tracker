@@ -22,7 +22,15 @@ class _DashboardShellState extends State<DashboardShell> {
     'Settings',
   ];
 
-  // Dashboard is real; the rest are placeholders
+  static const _icons = [
+    Icons.dashboard_outlined,
+    Icons.receipt_long_outlined,
+    Icons.add_circle_outline,
+    Icons.pie_chart_outline,
+    Icons.savings_outlined,
+    Icons.settings_outlined,
+  ];
+
   final _pages = const [
     HomePage(),
     PlaceholderPage(label: 'Transactions'),
@@ -41,12 +49,13 @@ class _DashboardShellState extends State<DashboardShell> {
       body: Row(
         children: [
           _Sidebar(
+            icons: _icons,
             labels: _labels,
+            selectedIndex: _selectedIndex,
             onSelect: (i) => setState(() => _selectedIndex = i),
           ),
           const VerticalDivider(width: 1),
           Expanded(
-            // No animation: IndexedStack just swaps visibility instantly.
             child: IndexedStack(
               index: _selectedIndex,
               children: _pages,
@@ -58,28 +67,32 @@ class _DashboardShellState extends State<DashboardShell> {
   }
 }
 
-/// Plain sidebar: text labels only, no icons, no selected-state
-/// styling. Tapping a row just calls onSelect — no visual feedback.
 class _Sidebar extends StatelessWidget {
+  final List<IconData> icons;
   final List<String> labels;
+  final int selectedIndex;
   final ValueChanged<int> onSelect;
 
   const _Sidebar({
+    required this.icons,
     required this.labels,
+    required this.selectedIndex,
     required this.onSelect,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 110,
+      width: 100,
       color: AppColors.darkTeal,
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Column(
         children: [
-          for (var i = 0; i < labels.length; i++)
+          for (var i = 0; i < icons.length; i++)
             _SidebarItem(
+              icon: icons[i],
               label: labels[i],
+              selected: i == selectedIndex,
               onTap: () => onSelect(i),
             ),
         ],
@@ -89,11 +102,15 @@ class _Sidebar extends StatelessWidget {
 }
 
 class _SidebarItem extends StatelessWidget {
+  final IconData icon;
   final String label;
+  final bool selected;
   final VoidCallback onTap;
 
   const _SidebarItem({
+    required this.icon,
     required this.label,
+    required this.selected,
     required this.onTap,
   });
 
@@ -103,14 +120,26 @@ class _SidebarItem extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-        child: Text(
-          label,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 10,
-            color: AppColors.lightPink,
-          ),
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        color: selected ? AppColors.cyan : Colors.transparent,
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              size: 20,
+              color: selected ? AppColors.darkTeal : AppColors.lightPink,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 9,
+                color: selected ? AppColors.darkTeal : AppColors.lightPink,
+              ),
+            ),
+          ],
         ),
       ),
     );

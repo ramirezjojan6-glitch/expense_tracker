@@ -96,7 +96,7 @@ class _DashboardShellState extends State<DashboardShell> {
                       size: 22,
                       color: i == _selectedIndex
                           ? AppColors.cyan
-                          : AppColors.darkTeal.withOpacity(0.5),
+                          : AppColors.darkTeal.withValues(alpha: 0.5),
                     ),
                   ),
               ],

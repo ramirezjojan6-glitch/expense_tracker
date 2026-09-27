@@ -58,7 +58,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                         decoration: BoxDecoration(
                           color: i == _tabIndex
                               ? AppColors.cyan
-                              : Colors.white.withOpacity(0.6),
+                              : Colors.white.withValues(alpha: 0.6),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(

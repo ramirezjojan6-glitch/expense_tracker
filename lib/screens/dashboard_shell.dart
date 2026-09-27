@@ -43,9 +43,6 @@ class _DashboardShellState extends State<DashboardShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_labels[_selectedIndex]),
-      ),
       body: Row(
         children: [
           _Sidebar(
@@ -54,11 +51,42 @@ class _DashboardShellState extends State<DashboardShell> {
             selectedIndex: _selectedIndex,
             onSelect: (i) => setState(() => _selectedIndex = i),
           ),
-          const VerticalDivider(width: 1),
           Expanded(
-            child: IndexedStack(
-              index: _selectedIndex,
-              children: _pages,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    AppColors.softCyan,
+                    AppColors.softPink,
+                  ],
+                ),
+              ),
+              child: SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                      child: Text(
+                        _labels[_selectedIndex],
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.darkTeal,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: IndexedStack(
+                        index: _selectedIndex,
+                        children: _pages,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],

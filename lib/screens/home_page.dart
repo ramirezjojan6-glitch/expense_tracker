@@ -4,7 +4,6 @@ import '../widgets/summary_cards_row.dart';
 import '../widgets/spending_overview_card.dart';
 import '../widgets/recent_transactions_card.dart';
 
-
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 

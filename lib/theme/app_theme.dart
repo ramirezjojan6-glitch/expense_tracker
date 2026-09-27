@@ -20,7 +20,7 @@ class AppTheme {
       fontFamily: 'FacebookSans',
       textTheme: TextTheme(
         titleLarge: GoogleFonts.fredoka(
-          fontSize: 20,
+          fontSize: 25,
           fontWeight: FontWeight.w600,
           color: AppColors.darkTeal,
         ),

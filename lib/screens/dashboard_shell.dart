@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../widgets/glass_card.dart';
 import 'home_page.dart';
+import 'transactions_page.dart';
 import 'placeholder_page.dart';
 
 class DashboardShell extends StatefulWidget {
@@ -33,7 +35,7 @@ class _DashboardShellState extends State<DashboardShell> {
 
   final _pages = const [
     HomePage(),
-    PlaceholderPage(label: 'Transactions'),
+    TransactionsPage(),
     PlaceholderPage(label: 'Add expense'),
     PlaceholderPage(label: 'Budget'),
     PlaceholderPage(label: 'Savings'),
@@ -43,131 +45,63 @@ class _DashboardShellState extends State<DashboardShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: [
-          _Sidebar(
-            icons: _icons,
-            labels: _labels,
-            selectedIndex: _selectedIndex,
-            onSelect: (i) => setState(() => _selectedIndex = i),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppColors.softCyan,
+              AppColors.softPink,
+            ],
           ),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    AppColors.softCyan,
-                    AppColors.softPink,
-                  ],
+        ),
+        child: SafeArea(
+          bottom: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                child: Text(
+                  _labels[_selectedIndex],
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
-              child: SafeArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-                      child: Text(
-                        _labels[_selectedIndex],
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.darkTeal,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: IndexedStack(
-                        index: _selectedIndex,
-                        children: _pages,
-                      ),
-                    ),
-                  ],
+              Expanded(
+                child: IndexedStack(
+                  index: _selectedIndex,
+                  children: _pages,
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+          child: GlassCard(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+            borderRadius: 16,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                for (var i = 0; i < _icons.length; i++)
+                  GestureDetector(
+                    onTap: () => setState(() => _selectedIndex = i),
+                    child: Icon(
+                      _icons[i],
+                      size: 22,
+                      color: i == _selectedIndex
+                          ? AppColors.cyan
+                          : AppColors.darkTeal.withOpacity(0.5),
+                    ),
+                  ),
+              ],
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Sidebar extends StatelessWidget {
-  final List<IconData> icons;
-  final List<String> labels;
-  final int selectedIndex;
-  final ValueChanged<int> onSelect;
-
-  const _Sidebar({
-    required this.icons,
-    required this.labels,
-    required this.selectedIndex,
-    required this.onSelect,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 100,
-      color: AppColors.darkTeal,
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Column(
-        children: [
-          for (var i = 0; i < icons.length; i++)
-            _SidebarItem(
-              icon: icons[i],
-              label: labels[i],
-              selected: i == selectedIndex,
-              onTap: () => onSelect(i),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SidebarItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  const _SidebarItem({
-    required this.icon,
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        color: selected ? AppColors.cyan : Colors.transparent,
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              size: 20,
-              color: selected ? AppColors.darkTeal : AppColors.lightPink,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 9,
-                color: selected ? AppColors.darkTeal : AppColors.lightPink,
-              ),
-            ),
-          ],
         ),
       ),
     );

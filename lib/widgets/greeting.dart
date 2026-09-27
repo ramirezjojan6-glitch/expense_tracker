@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
 
 class Greeting extends StatelessWidget {
   const Greeting({super.key});
@@ -8,17 +7,13 @@ class Greeting extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
+      children: [
         Text(
           'Good morning, Jojan!',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: AppColors.darkTeal,
-          ),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
-        SizedBox(height: 4),
-        Text(
+        const SizedBox(height: 4),
+        const Text(
           "Here's your financial summary.",
           style: TextStyle(fontSize: 13, color: Colors.black54),
         ),

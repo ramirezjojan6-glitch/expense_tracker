@@ -4,6 +4,7 @@ import '../widgets/glass_card.dart';
 import 'home_page.dart';
 import 'transactions_page.dart';
 import 'add_expense_page.dart';
+import 'budget_page.dart';
 import 'placeholder_page.dart';
 
 class DashboardShell extends StatefulWidget {
@@ -21,7 +22,6 @@ class _DashboardShellState extends State<DashboardShell> {
     'Transactions',
     'Add expense',
     'Budget',
-    'Savings',
     'Settings',
   ];
 
@@ -30,7 +30,6 @@ class _DashboardShellState extends State<DashboardShell> {
     Icons.receipt_long_outlined,
     Icons.add_circle_outline,
     Icons.pie_chart_outline,
-    Icons.savings_outlined,
     Icons.settings_outlined,
   ];
 
@@ -38,8 +37,7 @@ class _DashboardShellState extends State<DashboardShell> {
     HomePage(),
     TransactionsPage(),
     AddExpensePage(),
-    PlaceholderPage(label: 'Budget'),
-    PlaceholderPage(label: 'Savings'),
+    BudgetPage(),
     PlaceholderPage(label: 'Settings'),
   ];
 

@@ -151,14 +151,14 @@ class _TransactionsPageState extends State<TransactionsPage> {
                   Text(
                     t.description,
                     style: const TextStyle(
-                      fontSize: 13,
+                      fontSize: 18,
                       color: AppColors.darkTeal,
                     ),
                   ),
                   Text(
                     t.category,
                     style: const TextStyle(
-                      fontSize: 11,
+                      fontSize: 15,
                       color: Colors.black54,
                     ),
                   ),
@@ -167,7 +167,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
               Text(
                 t.amount,
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 15,
                   fontWeight: FontWeight.w600,
                   color: t.color,
                 ),

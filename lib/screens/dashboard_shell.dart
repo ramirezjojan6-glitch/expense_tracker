@@ -3,6 +3,7 @@ import '../theme/app_colors.dart';
 import '../widgets/glass_card.dart';
 import 'home_page.dart';
 import 'transactions_page.dart';
+import 'add_expense_page.dart';
 import 'placeholder_page.dart';
 
 class DashboardShell extends StatefulWidget {
@@ -36,7 +37,7 @@ class _DashboardShellState extends State<DashboardShell> {
   final _pages = const [
     HomePage(),
     TransactionsPage(),
-    PlaceholderPage(label: 'Add expense'),
+    AddExpensePage(),
     PlaceholderPage(label: 'Budget'),
     PlaceholderPage(label: 'Savings'),
     PlaceholderPage(label: 'Settings'),
@@ -96,7 +97,7 @@ class _DashboardShellState extends State<DashboardShell> {
                       size: 22,
                       color: i == _selectedIndex
                           ? AppColors.cyan
-                          : AppColors.darkTeal.withValues(alpha: 0.5),
+                          : AppColors.darkTeal.withOpacity(0.5),
                     ),
                   ),
               ],

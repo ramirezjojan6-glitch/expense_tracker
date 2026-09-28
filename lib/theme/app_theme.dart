@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
 class AppTheme {
@@ -18,15 +17,19 @@ class AppTheme {
         elevation: 0,
       ),
       fontFamily: 'FacebookSans',
-      textTheme: TextTheme(
-        titleLarge: GoogleFonts.fredoka(
-          fontSize: 25,
+      textTheme: const TextTheme(
+        titleLarge: TextStyle(
+          fontFamily: 'Fredoka',
+          fontSize: 20,
           fontWeight: FontWeight.w600,
+          fontVariations: [FontVariation('wght', 600)],
           color: AppColors.darkTeal,
         ),
-        titleMedium: GoogleFonts.fredoka(
-          fontSize: 24,
+        titleMedium: TextStyle(
+          fontFamily: 'Fredoka',
+          fontSize: 14,
           fontWeight: FontWeight.w600,
+          fontVariations: [FontVariation('wght', 600)],
           color: AppColors.darkTeal,
         ),
       ),

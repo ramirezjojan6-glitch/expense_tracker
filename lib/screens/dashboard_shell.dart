@@ -44,12 +44,12 @@ class _DashboardShellState extends State<DashboardShell> {
             colors: _selectedIndex == 0
                 ? const [
                     Colors.white,
-                    AppColors.lightPink,
+                    AppColors.teal,
                   ]
                 : const [
-                    AppColors.teal,
+                    AppColors.pink,
                     Colors.white,
-                    AppColors.lightPink,
+                    AppColors.teal,
                   ],
           ),
         ),

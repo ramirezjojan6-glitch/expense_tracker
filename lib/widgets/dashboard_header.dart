@@ -11,7 +11,7 @@ class DashboardHeader extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
       decoration: const BoxDecoration(
-        color: AppColors.teal,
+        color: Color.fromARGB(255, 233, 185, 202),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(36),
           bottomRight: Radius.circular(36),

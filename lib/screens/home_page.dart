@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/greeting.dart';
-import '../widgets/summary_cards_row.dart';
-import '../widgets/spending_overview_card.dart';
+import '../widgets/dashboard_header.dart';
+import '../widgets/categories_row.dart';
 import '../widgets/recent_transactions_card.dart';
 
 class HomePage extends StatelessWidget {
@@ -10,17 +9,32 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Greeting(),
-          SizedBox(height: 16),
-          SummaryCardsRow(),
-          SizedBox(height: 16),
-          SpendingOverviewCard(),
-          SizedBox(height: 16),
-          RecentTransactionsCard(),
+        children: [
+          const DashboardHeader(),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Categories',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF04342C),
+                  ),
+                ),
+                SizedBox(height: 8),
+                CategoriesRow(),
+              ],
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+            child: RecentTransactionsCard(),
+          ),
         ],
       ),
     );

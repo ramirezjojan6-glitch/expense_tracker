@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/page_title.dart';
 
 class PlaceholderPage extends StatelessWidget {
   final String label;
@@ -7,6 +8,9 @@ class PlaceholderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox.expand();
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: PageTitle(label),
+    );
   }
 }

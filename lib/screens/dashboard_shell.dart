@@ -17,14 +17,6 @@ class DashboardShell extends StatefulWidget {
 class _DashboardShellState extends State<DashboardShell> {
   int _selectedIndex = 0;
 
-  static const _labels = [
-    'Dashboard',
-    'Transactions',
-    'Add expense',
-    'Budget',
-    'Settings',
-  ];
-
   static const _icons = [
     Icons.dashboard_outlined,
     Icons.receipt_long_outlined,
@@ -45,35 +37,21 @@ class _DashboardShellState extends State<DashboardShell> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              AppColors.softCyan,
-              AppColors.softPink,
+              Colors.white,
+              AppColors.lightPink,
             ],
           ),
         ),
         child: SafeArea(
           bottom: false,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-                child: Text(
-                  _labels[_selectedIndex],
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ),
-              Expanded(
-                child: IndexedStack(
-                  index: _selectedIndex,
-                  children: _pages,
-                ),
-              ),
-            ],
+          child: IndexedStack(
+            index: _selectedIndex,
+            children: _pages,
           ),
         ),
       ),

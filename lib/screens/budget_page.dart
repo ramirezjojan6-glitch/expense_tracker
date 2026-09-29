@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/page_title.dart';
 import '../widgets/glass_card.dart';
 
 class BudgetPage extends StatelessWidget {
@@ -25,6 +26,8 @@ class BudgetPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const PageTitle('Budget'),
+          const SizedBox(height: 16),
           GlassCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

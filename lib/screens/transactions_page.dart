@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/page_title.dart';
 import '../widgets/glass_card.dart';
 
 class TransactionsPage extends StatefulWidget {
@@ -151,14 +152,14 @@ class _TransactionsPageState extends State<TransactionsPage> {
                   Text(
                     t.description,
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 13,
                       color: AppColors.darkTeal,
                     ),
                   ),
                   Text(
                     t.category,
                     style: const TextStyle(
-                      fontSize: 15,
+                      fontSize: 11,
                       color: Colors.black54,
                     ),
                   ),
@@ -167,7 +168,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
               Text(
                 t.amount,
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: t.color,
                 ),
@@ -181,47 +182,54 @@ class _TransactionsPageState extends State<TransactionsPage> {
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
-      child: GlassCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const PageTitle('Transactions'),
+          const SizedBox(height: 16),
+          GlassCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                for (var i = 0; i < _tabs.length; i++)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: GestureDetector(
-                      onTap: () => setState(() => _tabIndex = i),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: i == _tabIndex
-                              ? AppColors.cyan
-                              : Colors.white.withOpacity(0.6),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          _tabs[i],
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: i == _tabIndex
-                                ? Colors.white
-                                : AppColors.darkTeal,
+                Row(
+                  children: [
+                    for (var i = 0; i < _tabs.length; i++)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: GestureDetector(
+                          onTap: () => setState(() => _tabIndex = i),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: i == _tabIndex
+                                  ? AppColors.cyan
+                                  : Colors.white.withOpacity(0.6),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              _tabs[i],
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color: i == _tabIndex
+                                    ? Colors.white
+                                    : AppColors.darkTeal,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                ...children,
               ],
             ),
-            const SizedBox(height: 16),
-            ...children,
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

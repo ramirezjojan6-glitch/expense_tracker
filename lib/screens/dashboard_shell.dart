@@ -5,7 +5,7 @@ import 'home_page.dart';
 import 'transactions_page.dart';
 import 'add_expense_page.dart';
 import 'budget_page.dart';
-import 'placeholder_page.dart';
+import 'settings_page.dart';
 
 class DashboardShell extends StatefulWidget {
   const DashboardShell({super.key});
@@ -30,21 +30,27 @@ class _DashboardShellState extends State<DashboardShell> {
     TransactionsPage(),
     AddExpensePage(),
     BudgetPage(),
-    PlaceholderPage(label: 'Settings'),
+    SettingsPage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.white,
-              AppColors.lightPink,
-            ],
+            colors: _selectedIndex == 0
+                ? const [
+                    Colors.white,
+                    AppColors.lightPink,
+                  ]
+                : const [
+                    AppColors.teal,
+                    Colors.white,
+                    AppColors.lightPink,
+                  ],
           ),
         ),
         child: SafeArea(

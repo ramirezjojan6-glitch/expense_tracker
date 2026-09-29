@@ -12,10 +12,10 @@ class _SummaryCardsRowState extends State<SummaryCardsRow> {
   int _selectedIndex = 0;
 
   static const _items = [
-    ('Balance', '₱8,450', 'AVAILABLE BALANCE', Color.fromARGB(255, 237, 240, 89)),
+    ('Balance', '₱8,450', 'AVAILABLE BALANCE', Color.fromARGB(255, 238, 228, 86)),
     ('Income', '₱15,000', 'TOTAL INCOME THIS MONTH', AppColors.cyan),
     ('Expenses', '₱6,550', 'TOTAL EXPENSES THIS MONTH', AppColors.pink),
-    ('Remaining', '₱3,450', 'REMAINING THIS MONTH', Color.fromARGB(255, 13, 93, 240)),
+    ('Remaining', '₱3,450', 'REMAINING THIS MONTH', Color.fromARGB(255, 45, 71, 128)),
   ];
 
   Color _darken(Color c, double t) => Color.lerp(c, Colors.black, t)!;
@@ -28,13 +28,13 @@ class _SummaryCardsRowState extends State<SummaryCardsRow> {
     return Column(
       children: [
         ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 200),
+          constraints: const BoxConstraints(maxWidth: 250),
           child: AspectRatio(
-            aspectRatio: 1.9,
+            aspectRatio: 1.75,
             child: Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(16),
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -55,10 +55,10 @@ class _SummaryCardsRowState extends State<SummaryCardsRow> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        width: 26,
-                        height: 18,
+                        width: 30,
+                        height: 21,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(5),
                           gradient: const LinearGradient(
                             colors: [AppColors.lightPink, AppColors.pink],
                           ),
@@ -67,7 +67,7 @@ class _SummaryCardsRowState extends State<SummaryCardsRow> {
                       Icon(
                         Icons.wifi,
                         color: Colors.white.withOpacity(0.85),
-                        size: 14,
+                        size: 16,
                       ),
                     ],
                   ),
@@ -75,8 +75,8 @@ class _SummaryCardsRowState extends State<SummaryCardsRow> {
                   Text(
                     '•••• •••• •••• 4521',
                     style: TextStyle(
-                      fontSize: 11,
-                      letterSpacing: 1.5,
+                      fontSize: 12,
+                      letterSpacing: 1.6,
                       color: Colors.white.withOpacity(0.85),
                     ),
                   ),
@@ -91,7 +91,7 @@ class _SummaryCardsRowState extends State<SummaryCardsRow> {
                           Text(
                             selected.$3,
                             style: TextStyle(
-                              fontSize: 7,
+                              fontSize: 8,
                               letterSpacing: 0.4,
                               color: Colors.white.withOpacity(0.7),
                             ),
@@ -100,7 +100,7 @@ class _SummaryCardsRowState extends State<SummaryCardsRow> {
                           Text(
                             selected.$2,
                             style: const TextStyle(
-                              fontSize: 16,
+                              fontSize: 18,
                               fontWeight: FontWeight.w700,
                               color: Colors.white,
                             ),

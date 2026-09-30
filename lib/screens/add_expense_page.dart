@@ -96,113 +96,115 @@ class _AddExpensePageState extends State<AddExpensePage> {
     );
   }
 
-  void _stub(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+  void _showScanPlaceholder(String feature) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('$feature coming soon')),
+    );
+  }
+
+  Widget _buildScanButton({required String label, required IconData icon}) {
+    return IconButton(
+      tooltip: label,
+      onPressed: () => _showScanPlaceholder(label),
+      icon: Icon(icon),
+      style: IconButton.styleFrom(
+        foregroundColor: AppColors.teal,
+        backgroundColor: Colors.white.withValues(alpha: 0.55),
+        minimumSize: const Size(40, 40),
+      ),
+    );
+  }
+
+  Widget _buildInputField({
+    required TextEditingController controller,
+    TextInputType keyboardType = TextInputType.text,
+    String? prefixText,
+    String? hintText,
+    int minLines = 1,
+    int maxLines = 1,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        minLines: minLines,
+        maxLines: maxLines,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          prefixText: prefixText,
+          hintText: hintText,
+        ),
+        style: const TextStyle(fontSize: 13, color: AppColors.darkTeal),
+      ),
+    );
+  }
+
+  Widget _buildSaveButton() {
+    return GestureDetector(
+      onTap: _save,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Text(
+          'Save expense',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: AppColors.darkTeal,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const PageTitle('Add expense'),
-          const SizedBox(height: 20),
           Row(
             children: [
-              Expanded(
-                child: Material(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(14),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(14),
-                    onTap: () => _stub('Receipt scanning coming soon'),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 12,
-                      ),
-                      child: Row(
-                        children: const [
-                          Icon(
-                            Icons.receipt_long_outlined,
-                            size: 18,
-                            color: AppColors.teal,
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'AUTO',
-                                  style: TextStyle(
-                                    fontSize: 8,
-                                    letterSpacing: 0.5,
-                                    color: Colors.black45,
-                                  ),
-                                ),
-                                Text(
-                                  'Scan receipt',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.darkTeal,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+              const Expanded(child: PageTitle('Add expense')),
+              Padding(
+                padding: const EdgeInsets.only(top: 13),
+                child: _buildScanButton(
+                  label: 'QR scan',
+                  icon: Icons.qr_code_scanner,
                 ),
               ),
-              const SizedBox(width: 10),
-              Material(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(14),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(14),
-                  onTap: () => _stub('QR scanning coming soon'),
-                  child: const SizedBox(
-                    width: 48,
-                    height: 48,
-                    child: Icon(
-                      Icons.qr_code_scanner,
-                      color: AppColors.teal,
-                      size: 20,
-                    ),
-                  ),
+              Padding(
+                padding: const EdgeInsets.only(top: 13),
+                child: _buildScanButton(
+                  label: 'Quick scan',
+                  icon: Icons.document_scanner_outlined,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 18),
           GlassCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const _FieldLabel('Amount'),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: TextField(
-                    controller: _amountController,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      prefixText: '₱',
-                      hintText: '0.00',
-                    ),
-                    style: const TextStyle(fontSize: 13, color: AppColors.darkTeal),
-                  ),
+                _buildInputField(
+                  controller: _amountController,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  prefixText: '₱',
+                  hintText: '0.00',
                 ),
                 const SizedBox(height: 14),
                 const _FieldLabel('Category'),
@@ -220,45 +222,14 @@ class _AddExpensePageState extends State<AddExpensePage> {
                 ),
                 const SizedBox(height: 14),
                 const _FieldLabel('Note'),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: TextField(
-                    controller: _noteController,
-                    minLines: 3,
-                    maxLines: 4,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'e.g. Lunch at school',
-                    ),
-                    style: const TextStyle(fontSize: 13, color: AppColors.darkTeal),
-                  ),
+                _buildInputField(
+                  controller: _noteController,
+                  minLines: 3,
+                  maxLines: 4,
+                  hintText: 'e.g. Lunch at school',
                 ),
                 const SizedBox(height: 20),
-                GestureDetector(
-                  onTap: _save,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 150),
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.5),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Text(
-                      'Save expense',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.darkTeal,
-                      ),
-                    ),
-                  ),
-                ),
+                _buildSaveButton(),
               ],
             ),
           ),

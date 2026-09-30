@@ -134,12 +134,12 @@ class BudgetPage extends StatelessWidget {
             : (spentTotal / appState.monthlyBudget).clamp(0.0, 1.0);
 
         return SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const PageTitle('Budget'),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               GlassCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

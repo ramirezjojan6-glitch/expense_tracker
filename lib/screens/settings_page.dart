@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../theme/app_colors.dart';
 import '../theme/page_title.dart';
 import '../state/app_state.dart';
@@ -49,20 +50,50 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Future<void> _editCurrency(BuildContext context) async {
+  Future<void> _editChoice(
+    BuildContext context, {
+    required String title,
+    required List<String> options,
+    required String initialValue,
+    required ValueChanged<String> onSelected,
+  }) async {
     final result = await showChoiceDialog(
       context,
-      title: 'Currency',
-      options: const [
-        'Philippine peso (₱)',
-        'US dollar (\$)',
-        'Euro (€)',
-        'Japanese yen (¥)',
-      ],
-      initialValue: appState.currency,
+      title: title,
+      options: options,
+      initialValue: initialValue,
     );
-    if (result != null) appState.updateCurrency(result);
+    if (result != null) onSelected(result);
   }
+
+  Future<void> _editCurrency(BuildContext context) => _editChoice(
+    context,
+    title: 'Currency',
+    options: const [
+      'Philippine peso (₱)',
+      'US dollar (\$)',
+      'Euro (€)',
+      'Japanese yen (¥)',
+    ],
+    initialValue: appState.currency,
+    onSelected: appState.updateCurrency,
+  );
+
+  Future<void> _editAppearance(BuildContext context) => _editChoice(
+    context,
+    title: 'Appearance',
+    options: const ['Light mode', 'Dark mode'],
+    initialValue: appState.appearance,
+    onSelected: appState.updateAppearance,
+  );
+
+  Future<void> _editDataBackup(BuildContext context) => _editChoice(
+    context,
+    title: 'Data & backup',
+    options: const ['Save to cloud', 'Local only'],
+    initialValue: appState.dataBackup,
+    onSelected: appState.updateDataBackup,
+  );
 
   Future<void> _editMonthlyBudget(BuildContext context) async {
     final result = await showTextInputDialog(
@@ -74,26 +105,6 @@ class SettingsPage extends StatelessWidget {
     );
     final value = double.tryParse(result ?? '');
     if (value != null && value > 0) appState.updateMonthlyBudget(value);
-  }
-
-  Future<void> _editAppearance(BuildContext context) async {
-    final result = await showChoiceDialog(
-      context,
-      title: 'Appearance',
-      options: const ['Light mode', 'Dark mode'],
-      initialValue: appState.appearance,
-    );
-    if (result != null) appState.updateAppearance(result);
-  }
-
-  Future<void> _editDataBackup(BuildContext context) async {
-    final result = await showChoiceDialog(
-      context,
-      title: 'Data & backup',
-      options: const ['Save to cloud', 'Local only'],
-      initialValue: appState.dataBackup,
-    );
-    if (result != null) appState.updateDataBackup(result);
   }
 
   void _showAbout(BuildContext context) {
@@ -114,129 +125,136 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
+  Widget _buildProfileHeader(BuildContext context) {
+    return GlassCard(
+      onTap: () => _editProfile(context),
+      child: Row(
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: const BoxDecoration(
+              color: AppColors.teal,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.person, color: Colors.white),
+          ),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                appState.profileName,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              Text(
+                appState.profileRole,
+                style: const TextStyle(fontSize: 11, color: Colors.black54),
+              ),
+            ],
+          ),
+          const Spacer(),
+          const Icon(Icons.chevron_right, size: 18, color: AppColors.teal),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSettingsRow(BuildContext context, _SettingRow row, bool isLast) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: row.onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            border: isLast
+                ? null
+                : Border(
+                    bottom: BorderSide(
+                      color: Colors.black.withValues(alpha: 0.06),
+                    ),
+                  ),
+          ),
+          child: Row(
+            children: [
+              Icon(row.icon, size: 18, color: AppColors.teal),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  row.title,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppColors.darkTeal,
+                  ),
+                ),
+              ),
+              Text(
+                row.value,
+                style: const TextStyle(fontSize: 11, color: Colors.black54),
+              ),
+              const SizedBox(width: 6),
+              const Icon(Icons.chevron_right, size: 16, color: Colors.black38),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: appState,
       builder: (context, _) {
         final rows = [
-          ('Currency', appState.currency, Icons.attach_money,
-              () => _editCurrency(context)),
-          (
-            'Monthly budget',
-            '₱${appState.monthlyBudget.toStringAsFixed(0)}',
-            Icons.pie_chart_outline,
-            () => _editMonthlyBudget(context),
+          _SettingRow(
+            title: 'Currency',
+            value: appState.currency,
+            icon: Icons.attach_money,
+            onTap: () => _editCurrency(context),
           ),
-          ('Appearance', appState.appearance, Icons.dark_mode_outlined,
-              () => _editAppearance(context)),
-          ('Data & backup', appState.dataBackup, Icons.cloud_outlined,
-              () => _editDataBackup(context)),
-          ('About', 'Version 1.0', Icons.info_outline,
-              () => _showAbout(context)),
+          _SettingRow(
+            title: 'Monthly budget',
+            value: '₱${appState.monthlyBudget.toStringAsFixed(0)}',
+            icon: Icons.pie_chart_outline,
+            onTap: () => _editMonthlyBudget(context),
+          ),
+          _SettingRow(
+            title: 'Appearance',
+            value: appState.appearance,
+            icon: Icons.dark_mode_outlined,
+            onTap: () => _editAppearance(context),
+          ),
+          _SettingRow(
+            title: 'Data & backup',
+            value: appState.dataBackup,
+            icon: Icons.cloud_outlined,
+            onTap: () => _editDataBackup(context),
+          ),
+          _SettingRow(
+            title: 'About',
+            value: 'Version 1.0',
+            icon: Icons.info_outline,
+            onTap: () => _showAbout(context),
+          ),
         ];
 
         return SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const PageTitle('Settings'),
-              const SizedBox(height: 12),
-              GlassCard(
-                onTap: () => _editProfile(context),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 44,
-                      height: 44,
-                      decoration: const BoxDecoration(
-                        color: AppColors.teal,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(Icons.person, color: Colors.white),
-                    ),
-                    const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          appState.profileName,
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        Text(
-                          appState.profileRole,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    const Icon(
-                      Icons.chevron_right,
-                      size: 18,
-                      color: AppColors.teal,
-                    ),
-                  ],
-                ),
-              ),
+              const SizedBox(height: 10),
+              _buildProfileHeader(context),
               const SizedBox(height: 16),
               GlassCard(
                 padding: EdgeInsets.zero,
                 child: Column(
                   children: [
                     for (var i = 0; i < rows.length; i++)
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: rows[i].$4,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 14,
-                            ),
-                            decoration: BoxDecoration(
-                              border: i == rows.length - 1
-                                  ? null
-                                  : Border(
-                                      bottom: BorderSide(
-                                        color: Colors.black.withValues(alpha: 0.06),
-                                      ),
-                                    ),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(rows[i].$3, size: 18, color: AppColors.teal),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    rows[i].$1,
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      color: AppColors.darkTeal,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  rows[i].$2,
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.black54,
-                                  ),
-                                ),
-                                const SizedBox(width: 6),
-                                const Icon(
-                                  Icons.chevron_right,
-                                  size: 16,
-                                  color: Colors.black38,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                      _buildSettingsRow(context, rows[i], i == rows.length - 1),
                   ],
                 ),
               ),
@@ -246,4 +264,18 @@ class SettingsPage extends StatelessWidget {
       },
     );
   }
+}
+
+class _SettingRow {
+  final String title;
+  final String value;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _SettingRow({
+    required this.title,
+    required this.value,
+    required this.icon,
+    required this.onTap,
+  });
 }

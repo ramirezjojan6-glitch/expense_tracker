@@ -67,6 +67,13 @@ class _DashboardShellState extends State<DashboardShell> {
               bottom: false,
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 260),
+                layoutBuilder: (currentChild, previousChildren) => Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    ...previousChildren,
+                    if (currentChild != null) currentChild,
+                  ],
+                ),
                 transitionBuilder: (child, animation) => FadeTransition(
                   opacity: animation,
                   child: SlideTransition(
@@ -86,23 +93,26 @@ class _DashboardShellState extends State<DashboardShell> {
           ),
         ],
       ),
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-          child: GlassCard(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
-            borderRadius: 16,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                for (var i = 0; i < _icons.length; i++)
-                  _NavIcon(
-                    icon: _icons[i],
-                    selected: i == _selectedIndex,
-                    onTap: () => setState(() => _selectedIndex = i),
-                  ),
-              ],
+      bottomNavigationBar: Container(
+        color: AppColors.teal,
+        child: SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+            child: GlassCard(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+              borderRadius: 16,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  for (var i = 0; i < _icons.length; i++)
+                    _NavIcon(
+                      icon: _icons[i],
+                      selected: i == _selectedIndex,
+                      onTap: () => setState(() => _selectedIndex = i),
+                    ),
+                ],
+              ),
             ),
           ),
         ),
@@ -145,9 +155,7 @@ class _NavIconState extends State<_NavIcon> {
           curve: Curves.easeOut,
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: widget.selected
-                ? AppColors.cyan.withValues(alpha: 0.15)
-                : Colors.transparent,
+            color: widget.selected ? Colors.white : Colors.transparent,
             shape: BoxShape.circle,
           ),
           child: TweenAnimationBuilder<Color?>(
@@ -164,4 +172,4 @@ class _NavIconState extends State<_NavIcon> {
       ),
     );
   }
-}       
+}

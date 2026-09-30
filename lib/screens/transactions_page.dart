@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+
 import '../theme/app_colors.dart';
 import '../theme/page_title.dart';
 import '../state/app_state.dart';
 import '../widgets/glass_card.dart';
+import '../widgets/transaction_row.dart';
 
 class TransactionsPage extends StatefulWidget {
   const TransactionsPage({super.key});
@@ -17,8 +19,18 @@ class _TransactionsPageState extends State<TransactionsPage> {
   static const _tabs = ['All', 'Expenses', 'Income'];
 
   static const _months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
 
   String _formatDate(DateTime d) =>
@@ -29,6 +41,35 @@ class _TransactionsPageState extends State<TransactionsPage> {
     if (_tabIndex == 1) return sorted.where((t) => !t.isIncome).toList();
     if (_tabIndex == 2) return sorted.where((t) => t.isIncome).toList();
     return sorted;
+  }
+
+  Widget _buildTabButton(int index) {
+    final selected = index == _tabIndex;
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: GestureDetector(
+        onTap: () => setState(() => _tabIndex = index),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOut,
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+          decoration: BoxDecoration(
+            color: selected
+                ? AppColors.cyan
+                : Colors.white.withValues(alpha: 0.6),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text(
+            _tabs[index],
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: selected ? Colors.white : AppColors.darkTeal,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -59,50 +100,19 @@ class _TransactionsPageState extends State<TransactionsPage> {
           children.add(
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        t.description,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: AppColors.darkTeal,
-                        ),
-                      ),
-                      Text(
-                        t.category,
-                        style: const TextStyle(
-                          fontSize: 11,
-                          color: Colors.black54,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    '${t.isIncome ? '+' : '-'}₱${t.amount.toStringAsFixed(0)}',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: t.isIncome ? AppColors.teal : AppColors.pink,
-                    ),
-                  ),
-                ],
-              ),
+              child: TransactionRow(transaction: t),
             ),
           );
           lastDate = t.date;
         }
 
         return SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const PageTitle('Transactions'),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               GlassCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,36 +120,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                     Row(
                       children: [
                         for (var i = 0; i < _tabs.length; i++)
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: GestureDetector(
-                              onTap: () => setState(() => _tabIndex = i),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 220),
-                                curve: Curves.easeOut,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 14,
-                                  vertical: 6,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: i == _tabIndex
-                                      ? AppColors.cyan
-                                      : Colors.white.withValues(alpha: 0.6),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Text(
-                                  _tabs[i],
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                    color: i == _tabIndex
-                                        ? Colors.white
-                                        : AppColors.darkTeal,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                          _buildTabButton(i),
                       ],
                     ),
                     const SizedBox(height: 16),

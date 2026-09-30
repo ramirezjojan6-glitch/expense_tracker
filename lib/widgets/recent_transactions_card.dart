@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
+
 import '../state/app_state.dart';
 import 'glass_card.dart';
+import 'transaction_row.dart';
 
 class RecentTransactionsCard extends StatelessWidget {
   const RecentTransactionsCard({super.key});
@@ -25,41 +26,12 @@ class RecentTransactionsCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: GlassCard(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                  borderRadius: 14,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            t.description,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: AppColors.darkTeal,
-                            ),
-                          ),
-                          Text(
-                            t.category,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: Colors.black54,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        '${t.isIncome ? '+' : '-'}₱${t.amount.toStringAsFixed(0)}',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: t.isIncome ? AppColors.teal : AppColors.pink,
-                        ),
-                      ),
-                    ],
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 12,
                   ),
+                  borderRadius: 14,
+                  child: TransactionRow(transaction: t),
                 ),
               ),
           ],

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
 import 'summary_cards_row.dart';
 
 class DashboardHeader extends StatelessWidget {
@@ -32,7 +31,10 @@ class DashboardHeader extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             'Good day, Jojan',
-            style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.85)),
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.white.withValues(alpha: 0.85),
+            ),
           ),
           const SizedBox(height: 20),
           const SummaryCardsRow(),

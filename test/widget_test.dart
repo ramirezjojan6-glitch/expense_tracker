@@ -6,6 +6,6 @@ void main() {
   testWidgets('app builds without crashing', (WidgetTester tester) async {
     await tester.pumpWidget(const ExpenseTrackerApp());
 
-    expect(find.text('Good morning, Jojan!'), findsOneWidget);
+    expect(find.text('Good day, Jojan'), findsOneWidget);
   });
 }

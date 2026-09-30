@@ -1,117 +1,249 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/page_title.dart';
+import '../state/app_state.dart';
 import '../widgets/glass_card.dart';
+import '../widgets/dialogs.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
-  static const _rows = [
-    ('Currency', 'Philippine peso', Icons.attach_money),
-    ('Monthly budget', '₱10,000', Icons.pie_chart_outline),
-    ('Appearance', 'Light mode', Icons.dark_mode_outlined),
-    ('Data & backup', 'Save to cloud', Icons.cloud_outlined),
-    ('About', 'Version 1.0', Icons.info_outline),
-  ];
+  Future<void> _editProfile(BuildContext context) async {
+    final nameController = TextEditingController(text: appState.profileName);
+    final roleController = TextEditingController(text: appState.profileRole);
+
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit profile'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(labelText: 'Name'),
+            ),
+            TextField(
+              controller: roleController,
+              decoration: const InputDecoration(labelText: 'Role'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              appState.updateProfile(
+                name: nameController.text.trim(),
+                role: roleController.text.trim(),
+              );
+              Navigator.pop(context);
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _editCurrency(BuildContext context) async {
+    final result = await showChoiceDialog(
+      context,
+      title: 'Currency',
+      options: const [
+        'Philippine peso (₱)',
+        'US dollar (\$)',
+        'Euro (€)',
+        'Japanese yen (¥)',
+      ],
+      initialValue: appState.currency,
+    );
+    if (result != null) appState.updateCurrency(result);
+  }
+
+  Future<void> _editMonthlyBudget(BuildContext context) async {
+    final result = await showTextInputDialog(
+      context,
+      title: 'Monthly budget',
+      label: 'Amount',
+      initialValue: appState.monthlyBudget.toStringAsFixed(0),
+      keyboardType: TextInputType.number,
+    );
+    final value = double.tryParse(result ?? '');
+    if (value != null && value > 0) appState.updateMonthlyBudget(value);
+  }
+
+  Future<void> _editAppearance(BuildContext context) async {
+    final result = await showChoiceDialog(
+      context,
+      title: 'Appearance',
+      options: const ['Light mode', 'Dark mode'],
+      initialValue: appState.appearance,
+    );
+    if (result != null) appState.updateAppearance(result);
+  }
+
+  Future<void> _editDataBackup(BuildContext context) async {
+    final result = await showChoiceDialog(
+      context,
+      title: 'Data & backup',
+      options: const ['Save to cloud', 'Local only'],
+      initialValue: appState.dataBackup,
+    );
+    if (result != null) appState.updateDataBackup(result);
+  }
+
+  void _showAbout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('About'),
+        content: const Text(
+          'ExpenseTracker\nVersion 1.0\nBuilt as a school project.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const PageTitle('Settings'),
-          const SizedBox(height: 16),
-          GlassCard(
-            child: Row(
-              children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: const BoxDecoration(
-                    color: AppColors.teal,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.person, color: Colors.white),
-                ),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Jojan',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const Text(
-                      'Student',
-                      style: TextStyle(fontSize: 11, color: Colors.black54),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                const Icon(
-                  Icons.chevron_right,
-                  size: 18,
-                  color: AppColors.teal,
-                ),
-              ],
-            ),
+    return AnimatedBuilder(
+      animation: appState,
+      builder: (context, _) {
+        final rows = [
+          ('Currency', appState.currency, Icons.attach_money,
+              () => _editCurrency(context)),
+          (
+            'Monthly budget',
+            '₱${appState.monthlyBudget.toStringAsFixed(0)}',
+            Icons.pie_chart_outline,
+            () => _editMonthlyBudget(context),
           ),
-          const SizedBox(height: 16),
-          GlassCard(
-            padding: EdgeInsets.zero,
-            child: Column(
-              children: [
-                for (var i = 0; i < _rows.length; i++)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 14,
+          ('Appearance', appState.appearance, Icons.dark_mode_outlined,
+              () => _editAppearance(context)),
+          ('Data & backup', appState.dataBackup, Icons.cloud_outlined,
+              () => _editDataBackup(context)),
+          ('About', 'Version 1.0', Icons.info_outline,
+              () => _showAbout(context)),
+        ];
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const PageTitle('Settings'),
+              const SizedBox(height: 12),
+              GlassCard(
+                onTap: () => _editProfile(context),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: const BoxDecoration(
+                        color: AppColors.teal,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.person, color: Colors.white),
                     ),
-                    decoration: BoxDecoration(
-                      border: i == _rows.length - 1
-                          ? null
-                          : Border(
-                              bottom: BorderSide(
-                                color: Colors.black.withOpacity(0.06),
-                              ),
-                            ),
-                    ),
-                    child: Row(
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(_rows[i].$3, size: 18, color: AppColors.teal),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            _rows[i].$1,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: AppColors.darkTeal,
-                            ),
-                          ),
+                        Text(
+                          appState.profileName,
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                         Text(
-                          _rows[i].$2,
+                          appState.profileRole,
                           style: const TextStyle(
                             fontSize: 11,
                             color: Colors.black54,
                           ),
                         ),
-                        const SizedBox(width: 6),
-                        const Icon(
-                          Icons.chevron_right,
-                          size: 16,
-                          color: Colors.black38,
-                        ),
                       ],
                     ),
-                  ),
-              ],
-            ),
+                    const Spacer(),
+                    const Icon(
+                      Icons.chevron_right,
+                      size: 18,
+                      color: AppColors.teal,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              GlassCard(
+                padding: EdgeInsets.zero,
+                child: Column(
+                  children: [
+                    for (var i = 0; i < rows.length; i++)
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: rows[i].$4,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
+                            decoration: BoxDecoration(
+                              border: i == rows.length - 1
+                                  ? null
+                                  : Border(
+                                      bottom: BorderSide(
+                                        color: Colors.black.withValues(alpha: 0.06),
+                                      ),
+                                    ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(rows[i].$3, size: 18, color: AppColors.teal),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    rows[i].$1,
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      color: AppColors.darkTeal,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  rows[i].$2,
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                const Icon(
+                                  Icons.chevron_right,
+                                  size: 16,
+                                  color: Colors.black38,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
